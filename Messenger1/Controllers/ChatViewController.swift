@@ -31,8 +31,8 @@ class ChatViewController: MessagesViewController {
         super.viewDidLoad()
         
         //Mocked messages for testing:
-        messages.append(Message(sender: selfSender, messageId: "1", sentDate: Date(), kind: .text("Hello, I'm a sender")))
-        messages.append(Message(sender: selfSender, messageId: "1", sentDate: Date(), kind: .text("Hello, I'm a receiver")))
+        messages.append(Message(sender: selfSender, messageId: "1", sentDate: Date(), kind: .text("Hello, I'm the sender")))
+        messages.append(Message(sender: selfSender, messageId: "1", sentDate: Date(), kind: .text("Hello, I'm the receiver")))
         
         view.backgroundColor = .blue
         
@@ -41,6 +41,19 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         
+        messagesCollectionView.reloadData()
+        
+        //This functions can be also be used to bring the bubbles up on the viewController:
+        //loadFirstMessages()
+        
+    }
+    
+    //This function allows the message bubbles to come up on the viewController, otherwise they cannot be seen.
+    func loadFirstMessages() {
+        DispatchQueue.main.async {
+            self.messagesCollectionView.reloadData()
+            self.messagesCollectionView.scrollToLastItem(animated: false)
+        }
     }
 }
 
