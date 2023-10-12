@@ -8,8 +8,11 @@
 import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -140,12 +143,22 @@ class LoginViewController: UIViewController {
             return
         }
         
+        //Show Spinner (Activity Indicator)
+        spinner.show(in: view)
+        
         // firebase Log In
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] authResult, error in
             
             guard let strongSelf = self else {
                 return
             }
+            
+            //We need to show the spinner in the main thread:
+            DispatchQueue.main.async {
+                //Dismiss spinner (Activity Indicator)
+                strongSelf.spinner.dismiss()
+            }
+            
             guard let result = authResult, error == nil else {
                 print("Failed to log in user with email: \(email)")
                 return
